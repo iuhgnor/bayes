@@ -5,13 +5,19 @@ description = "Reaction conditions bayesian optimization demo"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "bofire[optimization]>=0.3.1",
+    "baybe>=0.14.3",
     "jupyter>=1.1.1",
+    "matplotlib>=3.10.8",
+    "pandas>=2.3.3",
+    "seaborn>=0.13.2",
     "sqlmodel>=0.0.37",
     "streamlit>=1.54.0",
     "torch>=2.10.0",
 ]
 
+[build-system]
+requires = ["uv_build>=0.9.8,<0.10.0"]
+build-backend = "uv_build"
 
 [tool.uv.sources]
 torch = [
@@ -26,3 +32,13 @@ default = true
 name = "pytorch-cpu"
 url = "https://mirrors.nju.edu.cn/pytorch/whl/cpu/"
 explicit = true
+
+[tool.ruff]
+line-length = 88
+select = [
+    "F",
+    "E",
+    "W",
+    "UP"
+]
+ignore = ["F401"]
