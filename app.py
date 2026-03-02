@@ -44,16 +44,14 @@ def start():
         st.error("请设置优化变量和目标")
 
 
-def step(name, description, variables, targets):
-    pass
-
-
 init_session_session_state()
 
 with st.sidebar:
     st.header("参数设定")
     st.session_state.name = st.text_input("实验名称", value="化学反应1")
-    st.session_state.description = st.text_area("实验描述", value="化学反应1条件优化")
+    st.session_state.description = st.text_area(
+        "实验描述", value="化学反应1条件优化", height=6
+    )
     st.session_state.batch_size = st.slider(
         "每轮推荐反应条件数目", min_value=1, max_value=10, value=3
     )
@@ -68,7 +66,7 @@ st.title("工艺条件贝叶斯优化")
 render_variables_section()
 
 st.markdown("---")
-col1, col2 = st.columns([1, 1])
+col1, col2, col3 = st.columns([1, 1, 1])
 with col1:
     if st.button("开始", type="primary"):
         expt_id = start()
@@ -85,11 +83,12 @@ with col2:
 
         st.session_state.conditions = condition_df
 
+with col3:
+    submit = st.button("提交")
+
 st.subheader(f"第{st.session_state.iteration}轮实验条件推荐")
 table_edit = st.data_editor(st.session_state.conditions, width="stretch")
-
-
-if st.button("提交") and not table_edit.empty:
+if submit and not table_edit.empty:
     result_df = table_edit[list(st.session_state.targets.keys())].astype(float)
     if result_df.isna().sum().sum() > 0:
         st.error("请填写所有实验结果")
@@ -106,7 +105,7 @@ if st.button("提交") and not table_edit.empty:
             results,  # type: ignore
         )
         st.session_state.iteration += 1
-        st.info(f"新增{len(variables)}条实验数据")
+        st.info(f"新增{st.session_state.batch_size}条实验数据")
 
         st.subheader("实验条件优化结果")
         fig = plot(st.session_state.expt_id)
